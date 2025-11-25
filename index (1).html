@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOI Kuwait - OSINT Threat Intelligence Platform</title>
+    <style>
+        :root {
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-400: rgba(45, 166, 178, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-orange-400: rgba(230, 129, 97, 1);
+            --color-orange-500: rgba(168, 75, 47, 1);
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-slate-900-rgb: 19, 52, 59;
+            --color-red-500-rgb: 192, 21, 47;
+            --color-red-400-rgb: 255, 84, 89;
+            --color-orange-500-rgb: 168, 75, 47;
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-primary-active: var(--color-teal-700);
+            --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-btn-primary-text: var(--color-cream-50);
+            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-error: var(--color-red-500);
+            --color-success: var(--color-teal-500);
+            --color-warning: var(--color-orange-500);
+            --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+            --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-family-mono: 'Courier New', monospace;
+            --radius-base: 8px;
+            --radius-lg: 12px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-gray-400-rgb: 119, 124, 124;
+                --color-teal-300-rgb: 50, 184, 198;
+                --color-gray-300-rgb: 167, 169, 169;
+                --color-gray-200-rgb: 245, 245, 245;
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+                --color-primary: var(--color-teal-300);
+                --color-primary-hover: var(--color-teal-400);
+                --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+                --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+                --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-error: var(--color-red-400);
+                --color-success: var(--color-teal-300);
+                --color-warning: var(--color-orange-400);
+                --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+                --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-card-border);
+            padding: var(--space-20) var(--space-24);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: var(--space-16);
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: var(--color-primary);
+            border-radius: var(--radius-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--color-btn-primary-text);
+            font-size: 20px;
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-title h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .header-title p {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            margin-top: 2px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: var(--space-8);
+            padding: var(--space-8) var(--space-16);
+            background: rgba(var(--color-teal-500-rgb), 0.15);
+            border: 1px solid rgba(var(--color-teal-500-rgb), 0.25);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--color-success);
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--color-success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-24);
+        }
+
+        .tabs {
+            display: flex;
+            gap: var(--space-8);
+            margin-bottom: var(--space-24);
+            border-bottom: 1px solid var(--color-card-border);
+            padding-bottom: 0;
+        }
+
+        .tab {
+            padding: var(--space-12) var(--space-20);
+            background: transparent;
+            border: none;
+            color: var(--color-text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            color: var(--color-text);
+            background: var(--color-secondary);
+        }
+
+        .tab.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-20);
+            margin-bottom: var(--space-24);
+        }
+
+        .card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-20);
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.2s;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-16);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--color-secondary);
+            border-radius: var(--radius-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: var(--space-8);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+        }
+
+        .input-group {
+            margin-bottom: var(--space-20);
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text);
+            margin-bottom: var(--space-8);
+        }
+
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            padding: var(--space-12);
+            font-size: 14px;
+            color: var(--color-text);
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            font-family: var(--font-family-base);
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px var(--color-focus-ring);
+        }
+
+        .btn {
+            padding: var(--space-12) var(--space-20);
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-8);
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-btn-primary-text);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-hover);
+        }
+
+        .btn-secondary {
+            background: var(--color-secondary);
+            color: var(--color-text);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-secondary-hover);
+        }
+
+        .btn-danger {
+            background: var(--color-error);
+            color: var(--color-white);
+        }
+
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .threat-item {
+            padding: var(--space-16);
+            background: var(--color-background);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-base);
+            margin-bottom: var(--space-12);
+        }
+
+        .threat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: var(--space-12);
+        }
+
+        .threat-domain {
+            font-family: var(--font-family-mono);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-text);
+            word-break: break-all;
+        }
+
+        .threat-score {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .score-critical {
+            background: rgba(var(--color-red-500-rgb), 0.15);
+            color: var(--color-error);
+            border: 1px solid rgba(var(--color-red-500-rgb), 0.25);
+        }
+
+        .score-high {
+            background: rgba(var(--color-orange-500-rgb), 0.15);
+            color: var(--color-warning);
+            border: 1px solid rgba(var(--color-orange-500-rgb), 0.25);
+        }
+
+        .score-medium {
+            background: rgba(var(--color-teal-500-rgb), 0.15);
+            color: var(--color-success);
+            border: 1px solid rgba(var(--color-teal-500-rgb), 0.25);
+        }
+
+        .threat-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-12);
+            font-size: 13px;
+        }
+
+        .threat-detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .threat-detail-label {
+            color: var(--color-text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .threat-detail-value {
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        .log-container {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-20);
+            height: 500px;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            padding: var(--space-8);
+            font-family: var(--font-family-mono);
+            font-size: 12px;
+            border-bottom: 1px solid var(--color-card-border);
+            color: var(--color-text-secondary);
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-entry.info {
+            color: var(--color-text);
+        }
+
+        .log-entry.success {
+            color: var(--color-success);
+        }
+
+        .log-entry.warning {
+            color: var(--color-warning);
+        }
+
+        .log-entry.error {
+            color: var(--color-error);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--color-text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: var(--space-16);
+            opacity: 0.3;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: var(--space-12);
+            margin-bottom: var(--space-20);
+            flex-wrap: wrap;
+        }
+
+        .filter-bar input,
+        .filter-bar select {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--color-secondary);
+            color: var(--color-text);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--space-8);
+            margin-top: var(--space-12);
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-16);
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+            }
+
+            .filter-bar input,
+            .filter-bar select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo-area">
+                <div class="logo">MOI</div>
+                <div class="header-title">
+                    <h1>OSINT Threat Intelligence Platform</h1>
+                    <p>Ministry of Interior - State of Kuwait</p>
+                </div>
+            </div>
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                <span id="systemStatus">System Active</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('dashboard')">📊 Dashboard</button>
+            <button class="tab" onclick="switchTab('certstream')">🔐 CertStream Monitor</button>
+            <button class="tab" onclick="switchTab('domain')">🌐 Domain Intelligence</button>
+            <button class="tab" onclick="switchTab('ip')">🖥️ IP Analysis</button>
+            <button class="tab" onclick="switchTab('email')">✉️ Email Intelligence</button>
+            <button class="tab" onclick="switchTab('logs')">📋 Activity Logs</button>
+        </div>
+
+        <div id="dashboard" class="tab-content active">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Threats Detected</span>
+                        <div class="card-icon">⚠️</div>
+                    </div>
+                    <div class="stat-value" id="threatsCount">0</div>
+                    <div class="stat-label">Last 24 hours</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Domains Monitored</span>
+                        <div class="card-icon">🌍</div>
+                    </div>
+                    <div class="stat-value" id="domainsCount">0</div>
+                    <div class="stat-label">Active monitoring</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Phishing Attempts</span>
+                        <div class="card-icon">🎣</div>
+                    </div>
+                    <div class="stat-value" id="phishingCount">0</div>
+                    <div class="stat-label">Blocked today</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Critical Alerts</span>
+                        <div class="card-icon">🚨</div>
+                    </div>
+                    <div class="stat-value" id="criticalCount">0</div>
+                    <div class="stat-label">Requires attention</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Recent Threats</span>
+                </div>
+                <div id="recentThreats"></div>
+            </div>
+        </div>
+
+        <div id="certstream" class="tab-content">
+            <div class="card" style="margin-bottom: 20px;">
+                <div class="card-header">
+                    <span class="card-title">Certificate Transparency Log Monitor</span>
+                </div>
+                <p style="color: var(--color-text-secondary); margin-bottom: 20px; font-size: 14px;">
+                    Real-time monitoring of SSL/TLS certificates to detect potential phishing domains targeting Kuwait entities
+                </p>
+                <div class="input-group">
+                    <label>Keywords to Monitor (comma-separated)</label>
+                    <input type="text" id="certstreamKeywords" placeholder="kuwait, nbk, kfh, boubyan, gulf, الكويت, بنك" value="kuwait, nbk, kfh, boubyan, gulf, الكويت, بنك">
+                </div>
+                <div class="input-group">
+                    <label>Threat Score Threshold</label>
+                    <select id="scoreThreshold">
+                        <option value="50">50 - Low (All suspicious)</option>
+                        <option value="65" selected>65 - Medium (Likely threats)</option>
+                        <option value="80">80 - High (Critical only)</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn btn-primary" onclick="startCertstream()">
+                        ▶️ Start Monitoring
+                    </button>
+                    <button class="btn btn-danger" onclick="stopCertstream()" disabled id="stopBtn">
+                        ⏹️ Stop Monitoring
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Detected Suspicious Certificates</span>
+                    <span class="badge" id="certCount">0 detected</span>
+                </div>
+                <div id="certstreamResults"></div>
+            </div>
+        </div>
+
+        <div id="domain" class="tab-content">
+            <div class="card" style="margin-bottom: 20px;">
+                <div class="card-header">
+                    <span class="card-title">Domain Intelligence Lookup</span>
+                </div>
+                <div class="input-group">
+                    <label>Domain Name</label>
+                    <input type="text" id="domainInput" placeholder="example.com">
+                </div>
+                <button class="btn btn-primary" onclick="analyzeDomain()">
+                    🔍 Analyze Domain
+                </button>
+            </div>
+
+            <div class="card">
+                <div id="domainResults"></div>
+            </div>
+        </div>
+
+        <div id="ip" class="tab-content">
+            <div class="card" style="margin-bottom: 20px;">
+                <div class="card-header">
+                    <span class="card-title">IP Address Analysis</span>
+                </div>
+                <div class="input-group">
+                    <label>IP Address</label>
+                    <input type="text" id="ipInput" placeholder="192.168.1.1">
+                </div>
+                <button class="btn btn-primary" onclick="analyzeIP()">
+                    🔍 Analyze IP
+                </button>
+            </div>
+
+            <div class="card">
+                <div id="ipResults"></div>
+            </div>
+        </div>
+
+        <div id="email" class="tab-content">
+            <div class="card" style="margin-bottom: 20px;">
+                <div class="card-header">
+                    <span class="card-title">Email Intelligence</span>
+                </div>
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="text" id="emailInput" placeholder="user@example.com">
+                </div>
+                <button class="btn btn-primary" onclick="analyzeEmail()">
+                    🔍 Analyze Email
+                </button>
+            </div>
+
+            <div class="card">
+                <div id="emailResults"></div>
+            </div>
+        </div>
+
+        <div id="logs" class="tab-content">
+            <div class="filter-bar">
+                <input type="text" id="logFilter" placeholder="Filter logs..." onkeyup="filterLogs()">
+                <select id="logLevel" onchange="filterLogs()">
+                    <option value="all">All Levels</option>
+                    <option value="info">Info</option>
+                    <option value="success">Success</option>
+                    <option value="warning">Warning</option>
+                    <option value="error">Error</option>
+                </select>
+                <button class="btn btn-secondary" onclick="clearLogs()">
+                    🗑️ Clear Logs
+                </button>
+                <button class="btn btn-primary" onclick="exportLogs()">
+                    💾 Export Logs
+                </button>
+            </div>
+
+            <div class="log-container" id="logContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        let certstreamActive = false;
+        let certstreamInterval = null;
+        let detectedThreats = [];
+        let logs = [];
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+            
+            addLog(`Switched to ${tabName} tab`, 'info');
+        }
+
+        function addLog(message, level = 'info') {
+            const timestamp = new Date().toLocaleString('en-GB', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+            
+            const logEntry = {
+                timestamp,
+                message,
+                level
+            };
+            
+            logs.unshift(logEntry);
+            
+            if (logs.length > 500) {
+                logs = logs.slice(0, 500);
+            }
+            
+            displayLogs();
+        }
+
+        function displayLogs() {
+            const container = document.getElementById('logContainer');
+            const filter = document.getElementById('logFilter')?.value.toLowerCase() || '';
+            const levelFilter = document.getElementById('logLevel')?.value || 'all';
+            
+            let filteredLogs = logs;
+            
+            if (filter) {
+                filteredLogs = filteredLogs.filter(log => 
+                    log.message.toLowerCase().includes(filter) || 
+                    log.timestamp.toLowerCase().includes(filter)
+                );
+            }
+            
+            if (levelFilter !== 'all') {
+                filteredLogs = filteredLogs.filter(log => log.level === levelFilter);
+            }
+            
+            if (filteredLogs.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📋</div><p>No logs to display</p></div>';
+                return;
+            }
+            
+            container.innerHTML = filteredLogs.map(log => 
+                `<div class="log-entry ${log.level}">[${log.timestamp}] ${log.message}</div>`
+            ).join('');
+        }
+
+        function filterLogs() {
+            displayLogs();
+        }
+
+        function clearLogs() {
+            if (confirm('Are you sure you want to clear all logs?')) {
+                logs = [];
+                displayLogs();
+                addLog('Logs cleared by user', 'info');
+            }
+        }
+
+        function exportLogs() {
+            const data = logs.map(log => `[${log.timestamp}] [${log.level.toUpperCase()}] ${log.message}`).join('\n');
+            const blob = new Blob([data], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `moi-osint-logs-${Date.now()}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            addLog('Logs exported successfully', 'success');
+        }
+
+        function startCertstream() {
+            const keywords = document.getElementById('certstreamKeywords').value.split(',').map(k => k.trim());
+            const threshold = parseInt(document.getElementById('scoreThreshold').value);
+            
+            if (keywords.length === 0 || keywords[0] === '') {
+                alert('Please enter at least one keyword to monitor');
+                return;
+            }
+            
+            certstreamActive = true;
+            document.getElementById('stopBtn').disabled = false;
+            document.querySelector('[onclick="startCertstream()"]').disabled = true;
+            document.getElementById('systemStatus').textContent = 'Monitoring Active';
+            
+            addLog(`Started CertStream monitoring for keywords: ${keywords.join(', ')}`, 'success');
+            addLog(`Threat score threshold set to: ${threshold}`, 'info');
+            
+            simulateCertstream(keywords, threshold);
+        }
+
+        function stopCertstream() {
+            certstreamActive = false;
+            if (certstreamInterval) {
+                clearInterval(certstreamInterval);
+                certstreamInterval = null;
+            }
+            
+            document.getElementById('stopBtn').disabled = true;
+            document.querySelector('[onclick="startCertstream()"]').disabled = false;
+            document.getElementById('systemStatus').textContent = 'System Active';
+            
+            addLog('Stopped CertStream monitoring', 'warning');
+        }
+
+        function simulateCertstream(keywords, threshold) {
+            const suspiciousDomains = [
+                'nbk-secure-login', 'kfh-verify-account', 'boubyan-bank-online',
+                'gulf-bank-portal', 'kuwait-airways-booking', 'moi-gov-portal',
+                'citra-gov-verify', 'kuwait-university-login', 'zain-kw-offers',
+                'ooredoo-kuwait-bill', 'stc-kuwait-payment', 'الكويت-بنك',
+                'بنك-الخليج-login', 'وزارة-الداخلية', 'kuwait-oil-company'
+            ];
+            
+            const tlds = ['.com', '.net', '.org', '.info', '.xyz', '.online', '.site', '.club', '.top'];
+            
+            certstreamInterval = setInterval(() => {
+                if (!certstreamActive) {
+                    clearInterval(certstreamInterval);
+                    return;
+                }
+                
+                const hasMatch = Math.random() > 0.3;
+                
+                if (hasMatch) {
+                    const baseDomain = suspiciousDomains[Math.floor(Math.random() * suspiciousDomains.length)];
+                    const tld = tlds[Math.floor(Math.random() * tlds.length)];
+                    const variation = Math.random() > 0.5 ? '-' + Math.random().toString(36).substring(7) : '';
+                    const domain = baseDomain + variation + tld;
+                    
+                    const score = Math.floor(Math.random() * 50) + 50;
+                    
+                    if (score >= threshold) {
+                        const threat = {
+                            id: Date.now(),
+                            domain: domain,
+                            score: score,
+                            timestamp: new Date().toISOString(),
+                            issuer: 'Let\'s Encrypt',
+                            keywords: keywords.filter(k => domain.toLowerCase().includes(k.toLowerCase())),
+                            status: 'active'
+                        };
+                        
+                        detectedThreats.unshift(threat);
+                        updateDashboard();
+                        displayCertstreamResults();
+                        
+                        const severity = score >= 80 ? 'CRITICAL' : score >= 65 ? 'HIGH' : 'MEDIUM';
+                        const logLevel = score >= 80 ? 'error' : score >= 65 ? 'warning' : 'info';
+                        
+                        addLog(`[${severity}] Suspicious certificate detected: ${domain} (Score: ${score})`, logLevel);
+                    }
+                }
+            }, 3000);
+        }
+
+        function displayCertstreamResults() {
+            const container = document.getElementById('certstreamResults');
+            document.getElementById('certCount').textContent = `${detectedThreats.length} detected`;
+            
+            if (detectedThreats.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div><p>No suspicious certificates detected yet. Start monitoring to see results.</p></div>';
+                return;
+            }
+            
+            container.innerHTML = detectedThreats.slice(0, 50).map(threat => {
+                const scoreClass = threat.score >= 80 ? 'score-critical' : threat.score >= 65 ? 'score-high' : 'score-medium';
+                const date = new Date(threat.timestamp);
+                
+                return `
+                    <div class="threat-item">
+                        <div class="threat-header">
+                            <div class="threat-domain">${threat.domain}</div>
+                            <div class="threat-score ${scoreClass}">Score: ${threat.score}</div>
+                        </div>
+                        <div class="threat-details">
+                            <div class="threat-detail-item">
+                                <div class="threat-detail-label">Detected</div>
+                                <div class="threat-detail-value">${date.toLocaleTimeString()}</div>
+                            </div>
+                            <div class="threat-detail-item">
+                                <div class="threat-detail-label">Certificate Issuer</div>
+                                <div class="threat-detail-value">${threat.issuer}</div>
+                            </div>
+                            <div class="threat-detail-item">
+                                <div class="threat-detail-label">Matched Keywords</div>
+                                <div class="threat-detail-value">${threat.keywords.join(', ')}</div>
+                            </div>
+                            <div class="threat-detail-item">
+                                <div class="threat-detail-label">Status</div>
+                                <div class="threat-detail-value">${threat.status}</div>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary btn-small" onclick="investigateThreat(${threat.id})">🔍 Investigate</button>
+                            <button class="btn btn-danger btn-small" onclick="blockThreat(${threat.id})">🚫 Block</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function investigateThreat(id) {
+            const threat = detectedThreats.find(t => t.id === id);
+            if (threat) {
+                addLog(`Investigating threat: ${threat.domain}`, 'info');
+                alert(`Threat Investigation\n\nDomain: ${threat.domain}\nScore: ${threat.score}\nStatus: ${threat.status}\n\nThis would open detailed investigation panel in production system.`);
+            }
+        }
+
+        function blockThreat(id) {
+            const threat = detectedThreats.find(t => t.id === id);
+            if (threat && confirm(`Block domain: ${threat.domain}?`)) {
+                threat.status = 'blocked';
+                displayCertstreamResults();
+                addLog(`Blocked threat: ${threat.domain}`, 'success');
+            }
+        }
+
+        function analyzeDomain() {
+            const domain = document.getElementById('domainInput').value.trim();
+            
+            if (!domain) {
+                alert('Please enter a domain name');
+                return;
+            }
+            
+            addLog(`Analyzing domain: ${domain}`, 'info');
+            
+            const analysis = {
+                domain: domain,
+                registrar: 'GoDaddy LLC',
+                registrationDate: '2023-05-15',
+                expiryDate: '2025-05-15',
+                nameservers: ['ns1.example.com', 'ns2.example.com'],
+                ipAddress: '185.199.' + Math.floor(Math.random() * 255) + '.' + Math.floor(Math.random() * 255),
+                country: 'United States',
+                risk: Math.random() > 0.5 ? 'Medium' : 'Low',
+                ssl: Math.random() > 0.3,
+                reputation: Math.floor(Math.random() * 100)
+            };
+            
+            const resultsHtml = `
+                <div class="card-header">
+                    <span class="card-title">Analysis Results: ${domain}</span>
+                </div>
+                <div style="margin-top: 20px;">
+                    <div class="threat-details">
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">IP Address</div>
+                            <div class="threat-detail-value">${analysis.ipAddress}</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Country</div>
+                            <div class="threat-detail-value">${analysis.country}</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Registrar</div>
+                            <div class="threat-detail-value">${analysis.registrar}</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Registration Date</div>
+                            <div class="threat-detail-value">${analysis.registrationDate}</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Risk Level</div>
+                            <div class="threat-detail-value">${analysis.risk}</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">SSL Certificate</div>
+                            <div class="threat-detail-value">${analysis.ssl ? 'Valid' : 'None'}</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Reputation Score</div>
+                            <div class="threat-detail-value">${analysis.reputation}/100</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Expiry Date</div>
+                            <div class="threat-detail-value">${analysis.expiryDate}</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <div class="threat-detail-label">Nameservers</div>
+                        <div style="margin-top: 8px; font-family: var(--font-family-mono); font-size: 13px;">
+                            ${analysis.nameservers.map(ns => `<div style="padding: 4px 0;">${ns}</div>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('domainResults').innerHTML = resultsHtml;
+            addLog(`Domain analysis completed for: ${domain}`, 'success');
+        }
+
+        function analyzeIP() {
+            const ip = document.getElementById('ipInput').value.trim();
+            
+            if (!ip) {
+                alert('Please enter an IP address');
+                return;
+            }
+            
+            addLog(`Analyzing IP address: ${ip}`, 'info');
+            
+            const analysis = {
+                ip: ip,
+                country: 'Kuwait',
+                city: 'Kuwait City',
+                isp: 'Kuwait Telecommunications Company',
+                asn: 'AS9318',
+                organization: 'Ooredoo Kuwait',
+                type: 'Residential',
+                threat: Math.random() > 0.7,
+                vpn: Math.random() > 0.8,
+                proxy: Math.random() > 0.9,
+                reputation: Math.floor(Math.random() * 100)
+            };
+            
+            const resultsHtml = `
+                <div class="card-header">
+                    <span class="card-title">Analysis Results: ${ip}</span>
+                </div>
+                <div style="margin-top: 20px;">
+                    <div class="threat-details">
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Country</div>
+                            <div class="threat-detail-value">${analysis.country}</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">City</div>
+                            <div class="threat-detail-value">${analysis.city}</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">ISP</div>
+                            <div class="threat-detail-value">${analysis.isp}</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">ASN</div>
+                            <div class="threat-detail-value">${analysis.asn}</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Organization</div>
+                            <div class="threat-detail-value">${analysis.organization}</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Connection Type</div>
+                            <div class="threat-detail-value">${analysis.type}</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">VPN Detection</div>
+                            <div class="threat-detail-value">${analysis.vpn ? 'Yes' : 'No'}</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Proxy Detection</div>
+                            <div class="threat-detail-value">${analysis.proxy ? 'Yes' : 'No'}</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Threat Status</div>
+                            <div class="threat-detail-value">${analysis.threat ? 'Flagged' : 'Clean'}</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Reputation Score</div>
+                            <div class="threat-detail-value">${analysis.reputation}/100</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('ipResults').innerHTML = resultsHtml;
+            addLog(`IP analysis completed for: ${ip}`, 'success');
+        }
+
+        function analyzeEmail() {
+            const email = document.getElementById('emailInput').value.trim();
+            
+            if (!email || !email.includes('@')) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            addLog(`Analyzing email: ${email}`, 'info');
+            
+            const [username, domain] = email.split('@');
+            
+            const analysis = {
+                email: email,
+                valid: true,
+                disposable: Math.random() > 0.8,
+                freeProvider: ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'].includes(domain),
+                domain: domain,
+                mxRecords: ['mx1.' + domain, 'mx2.' + domain],
+                spamScore: Math.floor(Math.random() * 100),
+                breaches: Math.floor(Math.random() * 5),
+                reputation: Math.floor(Math.random() * 100),
+                created: '2021-03-10'
+            };
+            
+            const resultsHtml = `
+                <div class="card-header">
+                    <span class="card-title">Analysis Results: ${email}</span>
+                </div>
+                <div style="margin-top: 20px;">
+                    <div class="threat-details">
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Email Valid</div>
+                            <div class="threat-detail-value">${analysis.valid ? 'Yes' : 'No'}</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Disposable Email</div>
+                            <div class="threat-detail-value">${analysis.disposable ? 'Yes' : 'No'}</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Free Provider</div>
+                            <div class="threat-detail-value">${analysis.freeProvider ? 'Yes' : 'No'}</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Domain</div>
+                            <div class="threat-detail-value">${analysis.domain}</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Spam Score</div>
+                            <div class="threat-detail-value">${analysis.spamScore}/100</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Data Breaches</div>
+                            <div class="threat-detail-value">${analysis.breaches} found</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Reputation</div>
+                            <div class="threat-detail-value">${analysis.reputation}/100</div>
+                        </div>
+                        <div class="threat-detail-item">
+                            <div class="threat-detail-label">Account Age</div>
+                            <div class="threat-detail-value">Est. ${analysis.created}</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <div class="threat-detail-label">MX Records</div>
+                        <div style="margin-top: 8px; font-family: var(--font-family-mono); font-size: 13px;">
+                            ${analysis.mxRecords.map(mx => `<div style="padding: 4px 0;">${mx}</div>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('emailResults').innerHTML = resultsHtml;
+            addLog(`Email analysis completed for: ${email}`, 'success');
+        }
+
+        function updateDashboard() {
+            document.getElementById('threatsCount').textContent = detectedThreats.length;
+            document.getElementById('domainsCount').textContent = detectedThreats.length * 3;
+            document.getElementById('phishingCount').textContent = detectedThreats.filter(t => t.score >= 65).length;
+            document.getElementById('criticalCount').textContent = detectedThreats.filter(t => t.score >= 80).length;
+            
+            const recentContainer = document.getElementById('recentThreats');
+            
+            if (detectedThreats.length === 0) {
+                recentContainer.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🛡️</div><p>No threats detected. System monitoring actively.</p></div>';
+                return;
+            }
+            
+            recentContainer.innerHTML = detectedThreats.slice(0, 5).map(threat => {
+                const scoreClass = threat.score >= 80 ? 'score-critical' : threat.score >= 65 ? 'score-high' : 'score-medium';
+                const date = new Date(threat.timestamp);
+                
+                return `
+                    <div class="threat-item">
+                        <div class="threat-header">
+                            <div class="threat-domain">${threat.domain}</div>
+                            <div class="threat-score ${scoreClass}">Score: ${threat.score}</div>
+                        </div>
+                        <div class="threat-details">
+                            <div class="threat-detail-item">
+                                <div class="threat-detail-label">Detected</div>
+                                <div class="threat-detail-value">${date.toLocaleString()}</div>
+                            </div>
+                            <div class="threat-detail-item">
+                                <div class="threat-detail-label">Type</div>
+                                <div class="threat-detail-value">Phishing Attempt</div>
+                            </div>
+                            <div class="threat-detail-item">
+                                <div class="threat-detail-label">Status</div>
+                                <div class="threat-detail-value">${threat.status}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        addLog('MOI OSINT Threat Intelligence Platform initialized', 'success');
+        addLog('System ready for operations', 'info');
+        updateDashboard();
+        displayCertstreamResults();
+    </script>
+</body>
+</html>
+
